@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
+import timezones from '../../data/timezones';
+import map from 'lodash/map';
 
 
 class SignupForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-            username: ''
+            username: '',
+            email: '',
+            password: '',
+            passwordConfirmation: '',
+            timezone: ''
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -20,6 +26,10 @@ class SignupForm extends Component {
     }
 
     render (){
+        const options = map(timezones, (val, key) =>
+            <option key={key} value={val}>{key}</option>
+        );
+
         return (
             <form onSubmit={this.onSubmit}>
                 <h2>Sign Up</h2>
@@ -32,6 +42,40 @@ class SignupForm extends Component {
                             type="text" 
                             name="username" 
                             placeholder="username" />
+                    <label className="control-label">Email</label>
+                        <input 
+                            className="form-control" 
+                            value={this.state.email} 
+                            onChange={this.onChange}
+                            type="email" 
+                            name="email" 
+                            placeholder="email" />                            
+                    <label className="control-label">Password</label>
+                        <input 
+                            className="form-control" 
+                            value={this.state.password} 
+                            onChange={this.onChange}
+                            type="password" 
+                            name="password" 
+                            placeholder="password" />
+                    <label className="control-label">Confirm Password</label>
+                        <input 
+                            className="form-control" 
+                            value={this.state.passwordConfirmation} 
+                            onChange={this.onChange}
+                            type="password" 
+                            name="passwordConfirmation" 
+                            placeholder="re-type password" />
+                    <label className="control-label">Time Zone</label>
+                        <select 
+                            className="form-control" 
+                            value={this.state.timezone} 
+                            onChange={this.onChange}
+                            name="timezone" 
+                        >
+                        <option value="" disabled>Select Timezone</option>
+                        {options}
+                        </select>                    
                 </div>
                 <button className="btn btn-primary">Sign up</button>
             </form>
