@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
-import axios from 'axios';
+
 
 
 class SignupForm extends Component {
@@ -12,7 +12,8 @@ class SignupForm extends Component {
             email: '',
             password: '',
             passwordConfirmation: '',
-            timezone: ''
+            timezone: '',
+            errors: {}
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -22,11 +23,21 @@ class SignupForm extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
     onSubmit(e){
+        this.setState({ errors: {} });
         e.preventDefault();
-        axios.post('/api/users', {user: this.state});
+        
+        this.props.userSignupRequest(this.state).then(
+            () => { },
+            (err) => { 
+                console.log('error');
+                console.log(err.response.data.errors); 
+                this.setState({errors: err.response.data.errors});
+            }
+        );
     }
 
     render (){
+        const { errors } = this.state;
         const options = map(timezones, (val, key) =>
             <option key={key} value={val}>{key}</option>
         );
@@ -50,7 +61,8 @@ class SignupForm extends Component {
                             onChange={this.onChange}
                             type="email" 
                             name="email" 
-                            placeholder="email" />                            
+                            placeholder="email" /> 
+                            {errors.email && <p className="alert-danger">{errors.email}</p>}                           
                     <label className="control-label">Password</label>
                         <input 
                             className="form-control" 
@@ -82,6 +94,9 @@ class SignupForm extends Component {
             </form>
         );
     }
+}
+SignupForm.propTypes = {
+    userSignupRequest: React.PropTypes.func.isRequired
 }
 
 export default SignupForm;
