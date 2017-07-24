@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
+import validateInput from '../../shared/signup';
 
 
 
@@ -13,7 +14,8 @@ class SignupForm extends Component {
             password: '',
             passwordConfirmation: '',
             timezone: '',
-            errors: {}
+            errors: {},
+            isLoading: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -22,18 +24,29 @@ class SignupForm extends Component {
     onChange(e){
         this.setState({[e.target.name]: e.target.value});
     }
+
+    isValid(){
+        const { errors, isValid } = validateInput(this.state);
+
+        if(!isValid){
+            this.setState({errors});
+        }
+
+        return isValid;
+    }
+
     onSubmit(e){
-        this.setState({ errors: {} });
         e.preventDefault();
-        
-        this.props.userSignupRequest(this.state).then(
-            () => { },
-            (err) => { 
-                console.log('error');
-                console.log(err.response.data.errors); 
-                this.setState({errors: err.response.data.errors});
-            }
-        );
+
+        if(this.isValid()){
+            this.setState({ errors: {}, isLoading:true });       
+            this.props.userSignupRequest(this.state).then(
+                () => { },
+                (err) => { 
+                    this.setState({errors: err.data.errors, isLoading:false});
+                }
+            );
+        }
     }
 
     render (){
@@ -54,6 +67,7 @@ class SignupForm extends Component {
                             type="text" 
                             name="username" 
                             placeholder="username" />
+                    {errors.username && <p className="alert-danger">{errors.username}</p>}         
                     <label className="control-label">Email</label>
                         <input 
                             className="form-control" 
@@ -71,6 +85,7 @@ class SignupForm extends Component {
                             type="password" 
                             name="password" 
                             placeholder="password" />
+                    {errors.password && <p className="alert-danger">{errors.password}</p>}        
                     <label className="control-label">Confirm Password</label>
                         <input 
                             className="form-control" 
@@ -90,7 +105,7 @@ class SignupForm extends Component {
                         {options}
                         </select>                    
                 </div>
-                <button className="btn btn-primary">Sign up</button>
+                <button disabled={this.state.isLoading} className="btn btn-primary">Sign up</button>
             </form>
         );
     }
