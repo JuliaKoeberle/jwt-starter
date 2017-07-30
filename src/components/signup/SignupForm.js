@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
 import validateInput from '../../shared/signup';
-
+import TextFieldGroup from '../common/TextFieldGroup';
 
 
 class SignupForm extends Component {
@@ -58,42 +58,42 @@ class SignupForm extends Component {
         return (
             <form onSubmit={this.onSubmit}>
                 <h2>Sign Up</h2>
-                <div className="form-group">
-                    <label className="control-label">Username</label>
-                        <input 
-                            className="form-control" 
-                            value={this.state.username} 
-                            onChange={this.onChange}
-                            type="text" 
-                            name="username" 
-                            placeholder="username" />
-                    {errors.username && <p className="alert-danger">{errors.username}</p>}         
-                    <label className="control-label">Email</label>
-                        <input 
-                            className="form-control" 
-                            value={this.state.email} 
-                            onChange={this.onChange}
-                            type="email" 
-                            name="email" 
-                            placeholder="email" /> 
-                            {errors.email && <p className="alert-danger">{errors.email}</p>}                           
-                    <label className="control-label">Password</label>
-                        <input 
-                            className="form-control" 
-                            value={this.state.password} 
-                            onChange={this.onChange}
-                            type="password" 
-                            name="password" 
-                            placeholder="password" />
-                    {errors.password && <p className="alert-danger">{errors.password}</p>}        
-                    <label className="control-label">Confirm Password</label>
-                        <input 
-                            className="form-control" 
-                            value={this.state.passwordConfirmation} 
-                            onChange={this.onChange}
-                            type="password" 
-                            name="passwordConfirmation" 
-                            placeholder="re-type password" />
+                <TextFieldGroup
+                    error={errors.username}
+                    label="Username"
+                    onChange={this.onChange}
+                    value={this.state.username}
+                    field="username"
+                    placeholder="User Name"
+                    type="text"
+                />
+                <TextFieldGroup
+                    error={errors.email}
+                    label="Email"
+                    onChange={this.onChange}
+                    value={this.state.email}
+                    field="email"
+                    placeholder="E Mail"
+                    type="email"
+                />
+                <TextFieldGroup
+                    error={errors.password}
+                    label="Password"
+                    onChange={this.onChange}
+                    value={this.state.password}
+                    field="password"
+                    placeholder="P-Word"
+                    type="password"
+                /> 
+                <TextFieldGroup
+                    label="Password Conf."
+                    onChange={this.onChange}
+                    value={this.state.passwordConfirmation}
+                    field="passwordConfirmation"
+                    placeholder="P-Word Conf."
+                    type="password"
+                />                                
+                <div className="form-group">            
                     <label className="control-label">Time Zone</label>
                         <select 
                             className="form-control" 
